@@ -8,6 +8,7 @@ using Engine.Engines;
 using Sprites;
 using System.Collections.Generic;
 using GameComponentNS;
+using gameClient.GameObjects;
 
 namespace gameClient
 {
@@ -45,6 +46,7 @@ namespace gameClient
             // create input engine
             new InputEngine(this);
             new FadeTextManager(this);
+            new ChatTextManager(this);
 
             // TODO: Add your initialization logic here change local host to newly created local host
             
@@ -56,6 +58,8 @@ namespace gameClient
 
             Action<PlayerData> joined = clientJoined;
             proxy.On<PlayerData>("Joined", joined);
+
+
 
             Action<List<PlayerData>> currentPlayers = clientPlayers;
             proxy.On<List<PlayerData>>("CurrentPlayers", currentPlayers);
@@ -105,7 +109,9 @@ namespace gameClient
             new OtherPlayerSprite(this, otherPlayerData, Content.Load<Texture2D>(otherPlayerData.imageName),
                                     new Point(otherPlayerData.playerPosition.X, otherPlayerData.playerPosition.Y));
             new FadeText(this, Vector2.Zero, otherPlayerData.GamerTag + " has joined the game ");
+            //    new GameObjects.ChatText(this, Vector2.Zero, otherPlayerData.GamerTag + " has joined the game ");
         }
+
 
         private void ServerConnection_StateChanged(StateChange State)
         {
@@ -163,6 +169,8 @@ namespace gameClient
             new SimplePlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
                                     new Point(player.playerPosition.X, player.playerPosition.Y));
             new FadeText(this, Vector2.Zero, " Welcome " + player.GamerTag + " you are playing as " + player.imageName);
+            //new GameObjects.ChatText(this, Vector2.Zero, player.GamerTag + " has joined the game ");
+
         }
 
         /// <summary>
@@ -197,9 +205,34 @@ namespace gameClient
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (InputEngine.IsKeyPressed(Keys.T))
+            {
+                string chatMessage = "";
+                chatMessage = Chating(chatMessage);
+                new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
+                proxy.Invoke("Chat", new Object[]
+                {
+                    chatMessage});
+            }
+
+            //if (InputEngine.IsKeyPressed(Keys.T))
+            //{
+            //    string chatMessage = "";
+            //    chatMessage = Chating(chatMessage);
+            //    new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
+            //}
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+        }
+
+        protected string Chating(string chatmsg)
+        {
+            chatmsg = "Chatting LOL";
+
+            return chatmsg;
+            //new ChatText(Game, Vector2.Zero, otherPlayerData.GamerTag + " Chatting ");
         }
 
         /// <summary>

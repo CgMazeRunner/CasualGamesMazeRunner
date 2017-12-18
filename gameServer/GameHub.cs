@@ -75,7 +75,13 @@ namespace gameServer
                 found.playerPosition = newPosition;
                 // Tell all the other clients this player has moved
                 Clients.Others.OtherMove(playerID, newPosition);
+                
             }
+        }
+
+        public void Chat(string message)
+        {
+           // Clients.All(new ChatText(this, Vector2.Zero, message););
         }
     }
 }
