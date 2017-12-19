@@ -40,11 +40,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
+    <Compile Include="GameObjects\Camera.cs" />
     <Compile Include="GameObjects\ChatText.cs" />
     <Compile Include="GameObjects\FadeText.cs" />
     <Compile Include="GameObjects\InputEngine.cs" />
     <Compile Include="GameObjects\OtherPlayers.cs" />
     <Compile Include="GameObjects\SimplePlayerSprite.cs" />
+    <Compile Include="GameObjects\TileManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,6 +70,8 @@
     <Content Include="Content\Player 2.png" />
     <Content Include="Content\Player 3.png" />
     <Content Include="Content\Player 4.png" />
+    <Content Include="Content\se_free_ground_texture.jpg" />
+    <Content Include="Content\se_free_road_texture.jpg" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

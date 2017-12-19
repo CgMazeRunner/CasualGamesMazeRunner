@@ -9,6 +9,7 @@ using Sprites;
 using System.Collections.Generic;
 using GameComponentNS;
 using gameClient.GameObjects;
+using MonoTileMapEx;
 
 namespace gameClient
 {
@@ -20,9 +21,133 @@ namespace gameClient
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
+        Texture2D _character;
         string connectionMessage = string.Empty;
+        Vector2 ViewportCentre
+        {
+            get
+            {
+                return new Vector2(GraphicsDevice.Viewport.Width / 2,
+                GraphicsDevice.Viewport.Height / 2);
+            }
+        }
+        List<Texture2D> tileTextures = new List<Texture2D>();
+        int[,] tileMap = new int[,]
+    {
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0},
+{0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0},
+{0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,0,1,1,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,0},
+{0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0},
+{0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0},
+{0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0},
+{0,0,0,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0},
+{0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0},
+{0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0},
+{0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,1,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,1,0},
+{0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,1,1,0,1,1,1,0,0,0,0,1,1,0,1,1,0},
+{0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0},
+{0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0},
+{0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
+{0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0},
+{0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0},
+{0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0},
+{0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0},
+{0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0},
+{0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0},
+{0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0},
+{0,0,0,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0},
+{0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0},
+{0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0},
+{0,1,1,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0},
+{0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1},
+{0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1},
+{0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1,0,0,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,0,1,1,1,1,0},
+{0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,0,1,1,1,1,0},
+{0,1,1,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0},
+{0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0},
+{0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0},
+{0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0},
+{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0},
+{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    };
+        int[,] hiddenmap = new int[,]
+        {
+             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    };
+
+        
 
         // SignalR Client object delarations
+        int tileWidth = 64;
+        int tileHeight = 64;
+        Vector2 cameraPosition = new Vector2(0, 0);
+        float cameraSpeed = 5;
+        private Rectangle _characterRect;
+        Vector2 WorldBounds;
+        KeyboardState oldState;
+        int impassible = 1;
+        public enum TileType { Road,Ground };
+       // SpriteFont debug;
+        TileManager _tManager;
+     //   private byte pulseColor;
+        Camera cam;
+
 
         HubConnection serverConnection;
         IHubProxy proxy;
@@ -32,6 +157,10 @@ namespace gameClient
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = tileWidth * 12;
+            graphics.PreferredBackBufferHeight = tileWidth * 6;
+            WorldBounds = new Vector2(tileMap.GetLength(1) * tileWidth, tileMap.GetLength(0) * tileHeight);
+
             Content.RootDirectory = "Content";
         }
 
@@ -47,9 +176,13 @@ namespace gameClient
             new InputEngine(this);
             new FadeTextManager(this);
             new ChatTextManager(this);
+            _tManager = new TileManager();
+            cam = new Camera(Vector2.Zero,
+                new Vector2(tileMap.GetLength(1) * tileWidth, tileMap.GetLength(0) * tileHeight));
+
 
             // TODO: Add your initialization logic here change local host to newly created local host
-            
+
             serverConnection = new HubConnection("http://cgmazerunner.azurewebsites.net");
             serverConnection.StateChanged += ServerConnection_StateChanged;
             proxy = serverConnection.CreateHubProxy("GameHub");
@@ -63,6 +196,9 @@ namespace gameClient
 
             Action<List<PlayerData>> currentPlayers = clientPlayers;
             proxy.On<List<PlayerData>>("CurrentPlayers", currentPlayers);
+
+            Action<string> _Chat = writeChat;
+            proxy.On<string>("chat", _Chat);
 
             Action<string, Position> otherMove = clientOtherMoved;
             proxy.On<string, Position>("OtherMove", otherMove);
@@ -166,7 +302,7 @@ namespace gameClient
         private void CreatePlayer(PlayerData player)
         {
             // Create an other player sprites in this client afte
-            new SimplePlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
+            new SimplePlayerSprite(this, player, _character = Content.Load<Texture2D>(player.imageName),
                                     new Point(player.playerPosition.X, player.playerPosition.Y));
             new FadeText(this, Vector2.Zero, " Welcome " + player.GamerTag + " you are playing as " + player.imageName);
             //new GameObjects.ChatText(this, Vector2.Zero, player.GamerTag + " has joined the game ");
@@ -184,6 +320,31 @@ namespace gameClient
 
             font = Content.Load<SpriteFont>("Message");
             Services.AddService<SpriteFont>(font);
+
+            Texture2D road = Content.Load<Texture2D>("se_free_road_texture");
+            tileTextures.Add(road);
+
+            Texture2D ground = Content.Load<Texture2D>("se_free_ground_texture");
+            tileTextures.Add(ground);
+
+            //_character = Content.Load<Texture2D>("chaser");
+            //debug = Content.Load<SpriteFont>("debug");
+            string[] backTileNames = { "road" };
+            string[] impassableTiles = { "ground" };
+            string[] hiddenTileNames = { "NONE" };
+
+            _tManager.addLayer("hidden", hiddenTileNames, hiddenmap);
+            int mapWidth = _tManager.Layers[0].MapWidth;
+            _tManager.addLayer("background", backTileNames, tileMap);
+
+            _tManager.ActiveLayer = _tManager.getLayer("background");
+            _tManager.ActiveLayer.makeImpassable(impassableTiles); 
+            _tManager.CurrentTile = new Tile();
+            _tManager.CurrentTile.TileName = "Character";
+            _tManager.CurrentTile.X = 6;
+            _tManager.CurrentTile.Y = 3;
+            _characterRect = new Rectangle(tileWidth * _tManager.CurrentTile.X, tileHeight * _tManager.CurrentTile.Y, tileWidth, tileHeight);
+
         }
 
         /// <summary>
@@ -208,11 +369,29 @@ namespace gameClient
             if (InputEngine.IsKeyPressed(Keys.T))
             {
                 string chatMessage = "";
-                chatMessage = Chating(chatMessage);
-                new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
-                proxy.Invoke("Chat", new Object[]
-                {
-                    chatMessage});
+                Chatting(chatMessage);
+
+                        
+                        chatMessage = Chatting(chatMessage);
+                        new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
+
+
+                //proxy.Invoke <string>("Chat").ContinueWith(
+                //    (q) => {
+
+
+
+                //        if (q.Result == null)
+                //        {
+                //            new GameObjects.ChatText(this, Vector2.Zero, "Not working");
+
+                //        }
+                //        else
+                //        {
+                //            writeChat(q.Result);
+                //        }
+                //    });
+
             }
 
             //if (InputEngine.IsKeyPressed(Keys.T))
@@ -222,16 +401,170 @@ namespace gameClient
             //    new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
             //}
 
+
+            Tile previousTile = _tManager.CurrentTile;
+
+            if (InputEngine.IsKeyHeld(Keys.W))
+            {
+                if (_tManager.ActiveLayer.valid("above", _tManager.CurrentTile))
+                    _tManager.CurrentTile =
+                        _tManager.ActiveLayer.getadjacentTile("above", _tManager.CurrentTile);
+            }
+            //&& !oldState.IsKeyDown(Keys.S)
+            if (InputEngine.IsKeyHeld(Keys.S))
+            {
+                if (_tManager.ActiveLayer.valid("below", _tManager.CurrentTile))
+                    _tManager.CurrentTile =
+                        _tManager.ActiveLayer.getadjacentTile("below", _tManager.CurrentTile);
+            }
+            //&& !oldState.IsKeyDown(Keys.A)
+            if (InputEngine.IsKeyHeld(Keys.A))
+                if (_tManager.ActiveLayer.valid("left", _tManager.CurrentTile))
+                    _tManager.CurrentTile =
+                        _tManager.ActiveLayer.getadjacentTile("left", _tManager.CurrentTile);
+            //&& !oldState.IsKeyDown(Keys.D)
+            if (InputEngine.IsKeyHeld(Keys.D))
+                if (_tManager.ActiveLayer.valid("right", _tManager.CurrentTile))
+                    _tManager.CurrentTile =
+                        _tManager.ActiveLayer.getadjacentTile("right", _tManager.CurrentTile);
+
+            Rectangle r = new Rectangle(_tManager.CurrentTile.X * tileWidth,
+                                           _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
+            bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
+            bool passable = _tManager.ActiveLayer.Tiles[_tManager.CurrentTile.Y, _tManager.CurrentTile.X].Passable;
+            Vector2 PossibleCameraMove = new Vector2(_characterRect.X - GraphicsDevice.Viewport.Bounds.Width / 2,
+                                                _characterRect.Y - GraphicsDevice.Viewport.Bounds.Height / 2);
+            if (passable)
+            {
+                _characterRect = r;
+            }
+            else
+            {
+                _tManager.CurrentTile = previousTile;
+            }
+
+            cam.follow(new Vector2((int)_characterRect.X, (int)_characterRect.Y), GraphicsDevice.Viewport);
+
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
 
-        protected string Chating(string chatmsg)
+        Vector2 TileDifference(Tile t1, Tile t2)
         {
-            chatmsg = "Chatting LOL";
+            Vector2 v1 = new Vector2(t1.X, t1.Y) * tileWidth;
+            Vector2 v2 = new Vector2(t2.X, t2.Y) * tileWidth;
+            Vector2 result = v1 - v2;
+            return result;
+        }
+        public void drawUsingPlayerCamera()
+        {
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, cam.CurrentCameraTranslation);
+            TileLayer background = _tManager.getLayer("background");
+            List<Tile> surroundingTiles = background.adjacentTo(_tManager.CurrentTile);
+            for (int x = 0; x < background.MapWidth; x++)
+                for (int y = 0; y < background.MapHeight; y++)
+                {
+                    int textureIndex = background.Tiles[y, x].Id;
+                    Texture2D texture = tileTextures[textureIndex];
+                    // Draw surrounding tiles
+                    if (surroundingTiles.Contains(background.Tiles[y, x]))
+                    {
+                        spriteBatch.Draw(texture,
+                            new Rectangle(x * tileWidth,
+                          y * tileHeight,
+                          tileWidth,
+                          tileHeight),
+                            new Color(255, 255, 255));
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(texture,
+                            new Rectangle(x * tileWidth,
+                          y * tileHeight,
+                          tileWidth,
+                          tileHeight),
+                            Color.White);
+                    }
+
+                }
+            // draw the character
+
+            spriteBatch.Draw(_character, new Rectangle(_tManager.CurrentTile.X * tileWidth,
+                          _tManager.CurrentTile.Y * tileHeight,
+                          tileWidth,
+                          tileHeight),
+                            Color.White);
+
+            //spriteBatch.Draw(_character, _characterRect, Color.White);
+            spriteBatch.End();
+
+            spriteBatch.Begin();
+            //spriteBatch.DrawString(debug, cameraPosition.ToString(), new Vector2(10, 10), Color.White);
+            //spriteBatch.DrawString(debug, new Vector2(_characterRect.X, _characterRect.Y).ToString(), new Vector2(10, 30), Color.White);
+            spriteBatch.End();
+
+
+        }
+        public void drawUsingTileCamera()
+        {
+            int tileMapWidth = tileMap.GetLength(1); // number of columns
+            int tileMapHeight = tileMap.GetLength(0); // number of rows
+            spriteBatch.Begin();
+
+            // Draw the background texture
+            TileLayer background = _tManager.getLayer("background");
+            List<Tile> surroundingTiles = background.adjacentTo(_tManager.CurrentTile);
+            for (int x = 0; x < background.MapWidth; x++)
+                for (int y = 0; y < background.MapHeight; y++)
+                {
+                    int textureIndex = background.Tiles[y, x].Id;
+                    Texture2D texture = tileTextures[textureIndex];
+                    // Draw surrounding tiles
+                    if (surroundingTiles.Contains(background.Tiles[y, x]))
+                    {
+                        spriteBatch.Draw(texture,
+                            new Rectangle(x * tileWidth - (int)cameraPosition.X,
+                          y * tileHeight - (int)cameraPosition.Y,
+                          tileWidth,
+                          tileHeight),
+                            new Color(255, 255, 255));
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(texture,
+                            new Rectangle(x * tileWidth - (int)cameraPosition.X,
+                          y * tileHeight - (int)cameraPosition.Y,
+                          tileWidth,
+                          tileHeight),
+                            Color.White);
+                    }
+
+                }
+            // draw the character
+            spriteBatch.Draw(_character, new Rectangle(_tManager.CurrentTile.X * tileWidth - (int)cameraPosition.X,
+                          _tManager.CurrentTile.Y * tileHeight - (int)cameraPosition.Y,
+                          tileWidth,
+                          tileHeight),
+                            Color.White);
+
+            spriteBatch.End();
+
+        }
+
+        private void writeChat(string result)
+        {
+            new GameObjects.ChatText(this, Vector2.Zero, result);
+        }
+
+        protected string Chatting(string chatmsg)
+        {
+
+            chatmsg = "Hello";
 
             return chatmsg;
+            
             //new ChatText(Game, Vector2.Zero, otherPlayerData.GamerTag + " Chatting ");
         }
 
@@ -246,6 +579,7 @@ namespace gameClient
             spriteBatch.DrawString(font, connectionMessage, new Vector2(10, 10), Color.White);
             // TODO: Add your drawing code here
             spriteBatch.End();
+            drawUsingPlayerCamera();
             base.Draw(gameTime);
         }
     }

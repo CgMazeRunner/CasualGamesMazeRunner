@@ -79,9 +79,18 @@ namespace gameServer
             }
         }
 
-        public void Chat(string message)
+        public string Chat(string message)
         {
-           // Clients.All(new ChatText(this, Vector2.Zero, message););
+            message = "Hello";
+            if (message != null)
+            {
+                Clients.Others.chat(message);
+                return message;
+            }
+            
+            return null;
+            // Clients.All(new ChatText(this, Vector2.Zero, message););
+
         }
     }
 }
