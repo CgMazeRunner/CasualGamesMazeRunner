@@ -22,6 +22,7 @@ namespace gameClient
         SpriteBatch spriteBatch;
         SpriteFont font;
         Texture2D _character;
+        PlayerData Player;
         string connectionMessage = string.Empty;
         Vector2 ViewportCentre
         {
@@ -34,7 +35,7 @@ namespace gameClient
         List<Texture2D> tileTextures = new List<Texture2D>();
         int[,] tileMap = new int[,]
     {
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 {0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0},
 {0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0},
 {0,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,0,1,1,0},
@@ -81,9 +82,9 @@ namespace gameClient
 {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     };
-        int[,] hiddenmap = new int[,]
+        int[,] hiddenMap = new int[,]
         {
-             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -137,12 +138,12 @@ namespace gameClient
         int tileWidth = 64;
         int tileHeight = 64;
         Vector2 cameraPosition = new Vector2(0, 0);
-        float cameraSpeed = 5;
+        float cameraSpeed = 2;
         private Rectangle _characterRect;
         Vector2 WorldBounds;
         KeyboardState oldState;
         int impassible = 1;
-        public enum TileType { Road,Ground };
+        public enum TileType { Dirt, Grass, Ground, Mud, Road, Rock, Wood };
        // SpriteFont debug;
         TileManager _tManager;
      //   private byte pulseColor;
@@ -301,12 +302,15 @@ namespace gameClient
         // When we get new player Data Create 
         private void CreatePlayer(PlayerData player)
         {
+            
             // Create an other player sprites in this client afte
-            new SimplePlayerSprite(this, player, _character = Content.Load<Texture2D>(player.imageName),
+            new SimplePlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
                                     new Point(player.playerPosition.X, player.playerPosition.Y));
+              player.playerPosition.X= _tManager.CurrentTile.X;
+              player.playerPosition.Y= _tManager.CurrentTile.Y;
             new FadeText(this, Vector2.Zero, " Welcome " + player.GamerTag + " you are playing as " + player.imageName);
             //new GameObjects.ChatText(this, Vector2.Zero, player.GamerTag + " has joined the game ");
-
+            Player = player;
         }
 
         /// <summary>
@@ -321,19 +325,34 @@ namespace gameClient
             font = Content.Load<SpriteFont>("Message");
             Services.AddService<SpriteFont>(font);
 
-            Texture2D road = Content.Load<Texture2D>("se_free_road_texture");
-            tileTextures.Add(road);
+            Texture2D dirt = Content.Load<Texture2D>("se_free_dirt_texture");
+            tileTextures.Add(dirt);
+
+            Texture2D grass = Content.Load<Texture2D>("se_free_grass_texture");
+            tileTextures.Add(grass);
 
             Texture2D ground = Content.Load<Texture2D>("se_free_ground_texture");
             tileTextures.Add(ground);
 
-            //_character = Content.Load<Texture2D>("chaser");
-            //debug = Content.Load<SpriteFont>("debug");
-            string[] backTileNames = { "road" };
-            string[] impassableTiles = { "ground" };
-            string[] hiddenTileNames = { "NONE" };
+            Texture2D mud = Content.Load<Texture2D>("se_free_mud_texture");
+            tileTextures.Add(mud);
 
-            _tManager.addLayer("hidden", hiddenTileNames, hiddenmap);
+            Texture2D road = Content.Load<Texture2D>("se_free_road_texture");
+            tileTextures.Add(road);
+
+            Texture2D rock = Content.Load<Texture2D>("se_free_rock_texture");
+            tileTextures.Add(rock);
+
+            Texture2D wood = Content.Load<Texture2D>("se_free_wood_texture");
+            tileTextures.Add(wood);
+
+            _character = Content.Load<Texture2D>("Player 1");
+            //debug = Content.Load<SpriteFont>("debug");
+            string[] backTileNames = { "free","grass","ground", "mud", "road", "rock", "wood" };
+            string[] impassableTiles = { "free", "ground", "mud", "rock" };
+            string[] hiddenTileNames = { "NONE", "chest", "key" };
+
+            _tManager.addLayer("hidden", hiddenTileNames, hiddenMap);
             int mapWidth = _tManager.Layers[0].MapWidth;
             _tManager.addLayer("background", backTileNames, tileMap);
 
@@ -341,8 +360,8 @@ namespace gameClient
             _tManager.ActiveLayer.makeImpassable(impassableTiles); 
             _tManager.CurrentTile = new Tile();
             _tManager.CurrentTile.TileName = "Character";
-            _tManager.CurrentTile.X = 6;
-            _tManager.CurrentTile.Y = 3;
+            _tManager.CurrentTile.X = 1;
+            _tManager.CurrentTile.Y = 1;
             _characterRect = new Rectangle(tileWidth * _tManager.CurrentTile.X, tileHeight * _tManager.CurrentTile.Y, tileWidth, tileHeight);
 
         }
@@ -365,6 +384,8 @@ namespace gameClient
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            KeyboardState keyState = Keyboard.GetState();
 
             if (InputEngine.IsKeyPressed(Keys.T))
             {
@@ -404,26 +425,26 @@ namespace gameClient
 
             Tile previousTile = _tManager.CurrentTile;
 
-            if (InputEngine.IsKeyHeld(Keys.W))
+            if (InputEngine.IsKeyPressed(Keys.Up))
             {
                 if (_tManager.ActiveLayer.valid("above", _tManager.CurrentTile))
                     _tManager.CurrentTile =
                         _tManager.ActiveLayer.getadjacentTile("above", _tManager.CurrentTile);
             }
             //&& !oldState.IsKeyDown(Keys.S)
-            if (InputEngine.IsKeyHeld(Keys.S))
+            if (InputEngine.IsKeyPressed(Keys.Down))
             {
                 if (_tManager.ActiveLayer.valid("below", _tManager.CurrentTile))
                     _tManager.CurrentTile =
                         _tManager.ActiveLayer.getadjacentTile("below", _tManager.CurrentTile);
             }
             //&& !oldState.IsKeyDown(Keys.A)
-            if (InputEngine.IsKeyHeld(Keys.A))
+            if (InputEngine.IsKeyPressed(Keys.Left))
                 if (_tManager.ActiveLayer.valid("left", _tManager.CurrentTile))
                     _tManager.CurrentTile =
                         _tManager.ActiveLayer.getadjacentTile("left", _tManager.CurrentTile);
             //&& !oldState.IsKeyDown(Keys.D)
-            if (InputEngine.IsKeyHeld(Keys.D))
+            if (InputEngine.IsKeyPressed(Keys.Right))
                 if (_tManager.ActiveLayer.valid("right", _tManager.CurrentTile))
                     _tManager.CurrentTile =
                         _tManager.ActiveLayer.getadjacentTile("right", _tManager.CurrentTile);
@@ -432,8 +453,8 @@ namespace gameClient
                                            _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
             bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
             bool passable = _tManager.ActiveLayer.Tiles[_tManager.CurrentTile.Y, _tManager.CurrentTile.X].Passable;
-            Vector2 PossibleCameraMove = new Vector2(_characterRect.X - GraphicsDevice.Viewport.Bounds.Width / 2,
-                                                _characterRect.Y - GraphicsDevice.Viewport.Bounds.Height / 2);
+            //Vector2 PossibleCameraMove = new Vector2(_characterRect.X - GraphicsDevice.Viewport.Bounds.Width / 2,
+            //                                    _characterRect.Y - GraphicsDevice.Viewport.Bounds.Height / 2);
             if (passable)
             {
                 _characterRect = r;
@@ -444,7 +465,7 @@ namespace gameClient
             }
 
             cam.follow(new Vector2((int)_characterRect.X, (int)_characterRect.Y), GraphicsDevice.Viewport);
-
+            oldState = keyState;
 
             // TODO: Add your update logic here
 
@@ -575,11 +596,12 @@ namespace gameClient
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            drawUsingPlayerCamera();
             spriteBatch.Begin();
             spriteBatch.DrawString(font, connectionMessage, new Vector2(10, 10), Color.White);
             // TODO: Add your drawing code here
             spriteBatch.End();
-            drawUsingPlayerCamera();
+            
             base.Draw(gameTime);
         }
     }

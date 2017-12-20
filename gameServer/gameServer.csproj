@@ -130,11 +130,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\PublishProfiles\cgMazeRunner - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\cgMazeRunner - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\cgMazeRunner - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\cgMazeRunner - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\gameServer20171217031402.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -154,6 +151,15 @@
     <Compile Include="GameHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonDataItems\CommonDataItems.csproj">
+      <Project>{3ea9a5bd-73d7-4f1e-a5b0-a17a582bc5dc}</Project>
+      <Name>CommonDataItems</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
