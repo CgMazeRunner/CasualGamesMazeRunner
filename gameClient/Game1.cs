@@ -145,7 +145,7 @@ namespace gameClient
         int impassible = 1;
         public enum TileType { Dirt, Grass, Ground, Mud, Road, Rock, Wood };
        // SpriteFont debug;
-        TileManager _tManager;
+        public static TileManager _tManager;
      //   private byte pulseColor;
         Camera cam;
 
@@ -302,15 +302,23 @@ namespace gameClient
         // When we get new player Data Create 
         private void CreatePlayer(PlayerData player)
         {
-            
+            //_tManager.CurrentTile.X = 1;
+            //_tManager.CurrentTile.Y = 1;
             // Create an other player sprites in this client afte
+            player.playerPosition.X = 64;
+            player.playerPosition.Y = 64;
             new SimplePlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
                                     new Point(player.playerPosition.X, player.playerPosition.Y));
-              player.playerPosition.X= _tManager.CurrentTile.X;
-              player.playerPosition.Y= _tManager.CurrentTile.Y;
+            //player.playerPosition.X;
+            //player.playerPosition.X = _tManager.CurrentTile.X;
+
+            // player.playerPosition.Y;
+            //player.playerPosition.Y = _tManager.CurrentTile.Y;
+             _character = Content.Load<Texture2D>(player.imageName);
             new FadeText(this, Vector2.Zero, " Welcome " + player.GamerTag + " you are playing as " + player.imageName);
+            //cam.follow(new Vector2((int)player.playerPosition.X, (int)player.playerPosition.Y), GraphicsDevice.Viewport);
             //new GameObjects.ChatText(this, Vector2.Zero, player.GamerTag + " has joined the game ");
-            Player = player;
+            //Player = player;
         }
 
         /// <summary>
@@ -347,6 +355,7 @@ namespace gameClient
             tileTextures.Add(wood);
 
             _character = Content.Load<Texture2D>("Player 1");
+
             //debug = Content.Load<SpriteFont>("debug");
             string[] backTileNames = { "free","grass","ground", "mud", "road", "rock", "wood" };
             string[] impassableTiles = { "free", "ground", "mud", "rock" };
@@ -425,29 +434,29 @@ namespace gameClient
 
             Tile previousTile = _tManager.CurrentTile;
 
-            if (InputEngine.IsKeyPressed(Keys.Up))
-            {
-                if (_tManager.ActiveLayer.valid("above", _tManager.CurrentTile))
-                    _tManager.CurrentTile =
-                        _tManager.ActiveLayer.getadjacentTile("above", _tManager.CurrentTile);
-            }
-            //&& !oldState.IsKeyDown(Keys.S)
-            if (InputEngine.IsKeyPressed(Keys.Down))
-            {
-                if (_tManager.ActiveLayer.valid("below", _tManager.CurrentTile))
-                    _tManager.CurrentTile =
-                        _tManager.ActiveLayer.getadjacentTile("below", _tManager.CurrentTile);
-            }
-            //&& !oldState.IsKeyDown(Keys.A)
-            if (InputEngine.IsKeyPressed(Keys.Left))
-                if (_tManager.ActiveLayer.valid("left", _tManager.CurrentTile))
-                    _tManager.CurrentTile =
-                        _tManager.ActiveLayer.getadjacentTile("left", _tManager.CurrentTile);
-            //&& !oldState.IsKeyDown(Keys.D)
-            if (InputEngine.IsKeyPressed(Keys.Right))
-                if (_tManager.ActiveLayer.valid("right", _tManager.CurrentTile))
-                    _tManager.CurrentTile =
-                        _tManager.ActiveLayer.getadjacentTile("right", _tManager.CurrentTile);
+            //if (InputEngine.IsKeyPressed(Keys.Up))
+            //{
+            //    if (_tManager.ActiveLayer.valid("above", _tManager.CurrentTile))
+            //        _tManager.CurrentTile =
+            //            _tManager.ActiveLayer.getadjacentTile("above", _tManager.CurrentTile);
+            //}
+            ////&& !oldState.IsKeyDown(Keys.S)
+            //if (InputEngine.IsKeyPressed(Keys.Down))
+            //{
+            //    if (_tManager.ActiveLayer.valid("below", _tManager.CurrentTile))
+            //        _tManager.CurrentTile =
+            //            _tManager.ActiveLayer.getadjacentTile("below", _tManager.CurrentTile);
+            //}
+            ////&& !oldState.IsKeyDown(Keys.A)
+            //if (InputEngine.IsKeyPressed(Keys.Left))
+            //    if (_tManager.ActiveLayer.valid("left", _tManager.CurrentTile))
+            //        _tManager.CurrentTile =
+            //            _tManager.ActiveLayer.getadjacentTile("left", _tManager.CurrentTile);
+            ////&& !oldState.IsKeyDown(Keys.D)
+            //if (InputEngine.IsKeyPressed(Keys.Right))
+            //    if (_tManager.ActiveLayer.valid("right", _tManager.CurrentTile))
+            //        _tManager.CurrentTile =
+            //            _tManager.ActiveLayer.getadjacentTile("right", _tManager.CurrentTile);
 
             Rectangle r = new Rectangle(_tManager.CurrentTile.X * tileWidth,
                                            _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
@@ -582,7 +591,7 @@ namespace gameClient
         protected string Chatting(string chatmsg)
         {
 
-            chatmsg = "Hello";
+            chatmsg = "hello";
 
             return chatmsg;
             

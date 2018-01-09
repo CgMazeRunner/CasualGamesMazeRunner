@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MonoTileMapEx
 {
-    class TileManager
+    public class TileManager
     {
         List<TileLayer> _layers = new List<TileLayer>();
 
@@ -85,7 +85,7 @@ namespace MonoTileMapEx
 
     }
 
-    class Tile 
+    public class Tile 
     {
         int _id;
 
@@ -126,7 +126,7 @@ namespace MonoTileMapEx
 
     }
 
-    class TileLayer
+    public class TileLayer
     {
         string _layername;
 

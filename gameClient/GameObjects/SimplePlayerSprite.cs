@@ -8,6 +8,7 @@ using CommonDataItems;
 using Engine.Engines;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.AspNet.SignalR.Client;
+using MonoTileMapEx;
 
 namespace Sprites
 {
@@ -22,11 +23,20 @@ namespace Sprites
         public Point previousPosition;		
         public int speed = 5;
         public TimeSpan delay = new TimeSpan(0,0,1);
+        TileManager _tManager;
+        Camera cam;
+        KeyboardState oldState;
+        private Rectangle _characterRect;
+        int tileWidth = 64;
+        int tileHeight = 64;
         // Constructor epects to see a loaded Texture
         // and a start position
+
+
         public SimplePlayerSprite(Game game, PlayerData data, Texture2D spriteImage,
                             Point startPosition) :base(game)
         {
+            _tManager = gameClient.Game1._tManager;
             pData = data;
             DrawOrder = 1;
             game.Components.Add(this);
@@ -37,19 +47,67 @@ namespace Sprites
             // Calculate the bounding rectangle
             BoundingRect = new Rectangle((int)Position.X, Position.Y, Image.Width, Image.Height);
 
+
+
         }
 
         public override void Update(GameTime gameTime)
         {
+            KeyboardState keyState = Keyboard.GetState();
+            Tile previousTile = _tManager.CurrentTile;
+
             previousPosition = Position;
-            if(InputEngine.IsKeyHeld(Keys.Up))
-                Position += new Point(0, -speed);
-            if (InputEngine.IsKeyHeld(Keys.Down))
-                Position += new Point(0, speed) ;
-            if (InputEngine.IsKeyHeld(Keys.Left))
-                Position += new Point(-speed,0);
-            if (InputEngine.IsKeyHeld(Keys.Right))
-                Position += new Point(speed,0) ;
+            if (InputEngine.IsKeyPressed(Keys.Up))
+                if (_tManager.ActiveLayer.valid("above", _tManager.CurrentTile))
+                {
+                    _tManager.CurrentTile =
+                          _tManager.ActiveLayer.getadjacentTile("above", _tManager.CurrentTile);
+                    Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                }
+
+            if (InputEngine.IsKeyPressed(Keys.Down))
+                if (_tManager.ActiveLayer.valid("below", _tManager.CurrentTile))
+                {
+                    _tManager.CurrentTile =
+                          _tManager.ActiveLayer.getadjacentTile("below", _tManager.CurrentTile);
+                    Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                }
+
+            if (InputEngine.IsKeyPressed(Keys.Left))
+                if (_tManager.ActiveLayer.valid("left", _tManager.CurrentTile))
+                {
+                    _tManager.CurrentTile =
+                          _tManager.ActiveLayer.getadjacentTile("left", _tManager.CurrentTile);
+                    Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                }
+
+            if (InputEngine.IsKeyPressed(Keys.Right))
+                if (_tManager.ActiveLayer.valid("right", _tManager.CurrentTile))
+                { _tManager.CurrentTile =
+                        _tManager.ActiveLayer.getadjacentTile("right", _tManager.CurrentTile);
+                    Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                } 
+            
+            Rectangle r = new Rectangle(_tManager.CurrentTile.X * tileWidth,
+                                        _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
+            bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
+            bool passable = _tManager.ActiveLayer.Tiles[_tManager.CurrentTile.Y, _tManager.CurrentTile.X].Passable;
+            //Vector2 PossibleCameraMove = new Vector2(_characterRect.X - GraphicsDevice.Viewport.Bounds.Width / 2,
+            //                                    _characterRect.Y - GraphicsDevice.Viewport.Bounds.Height / 2);
+            if (passable)
+            {
+                _characterRect = r;
+            }
+            else
+            {
+                _tManager.CurrentTile = previousTile;
+            }
+           
+               // cam.follow(new Vector2((int)_characterRect.X, (int)_characterRect.Y), GraphicsDevice.Viewport);
+           
+            oldState = keyState;
+
+            //Position += new Point(speed,0) ;
 
             delay -= gameTime.ElapsedGameTime; 
             // if we have moved pull back the proxy reference and send a message to the hub

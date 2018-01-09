@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,7 @@ namespace CommonDataItems
         public int XP;
         public Position playerPosition;
         public string Password;
+        public Texture2D character;
     }
   
 }
