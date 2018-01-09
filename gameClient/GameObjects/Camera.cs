@@ -12,10 +12,13 @@ namespace MonoTileMapEx
         Vector2 _camPos = Vector2.Zero;
         Vector2 _worldBound;
         Viewport _view;
-        public Matrix CurrentCameraTranslation { get
+        public Matrix CurrentCameraTranslation
+        {
+            get
             {
                 return Matrix.CreateTranslation(new Vector3(-_camPos, 0));
-            } }
+            }
+        }
 
 
         public Camera(Vector2 startPos, Vector2 bound)
@@ -32,7 +35,7 @@ namespace MonoTileMapEx
 
         public void follow(Vector2 followPos, Viewport v)
         {
-            _camPos = followPos - new Vector2(v.Width/2, v.Height/2);
+            _camPos = followPos - new Vector2(v.Width / 2, v.Height / 2);
             _camPos = Vector2.Clamp(_camPos, Vector2.Zero, _worldBound - new Vector2(v.Width, v.Height));
         }
 

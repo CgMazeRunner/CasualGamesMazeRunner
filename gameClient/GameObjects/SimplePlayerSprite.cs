@@ -62,7 +62,7 @@ namespace Sprites
                 {
                     _tManager.CurrentTile =
                           _tManager.ActiveLayer.getadjacentTile("above", _tManager.CurrentTile);
-                    Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                   // Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
                 }
 
             if (InputEngine.IsKeyPressed(Keys.Down))
@@ -70,7 +70,7 @@ namespace Sprites
                 {
                     _tManager.CurrentTile =
                           _tManager.ActiveLayer.getadjacentTile("below", _tManager.CurrentTile);
-                    Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                    //Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
                 }
 
             if (InputEngine.IsKeyPressed(Keys.Left))
@@ -78,18 +78,19 @@ namespace Sprites
                 {
                     _tManager.CurrentTile =
                           _tManager.ActiveLayer.getadjacentTile("left", _tManager.CurrentTile);
-                    Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                    //Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
                 }
 
             if (InputEngine.IsKeyPressed(Keys.Right))
                 if (_tManager.ActiveLayer.valid("right", _tManager.CurrentTile))
                 { _tManager.CurrentTile =
                         _tManager.ActiveLayer.getadjacentTile("right", _tManager.CurrentTile);
-                    Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                   // Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
                 } 
             
             Rectangle r = new Rectangle(_tManager.CurrentTile.X * tileWidth,
                                         _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
+            Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
             bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
             bool passable = _tManager.ActiveLayer.Tiles[_tManager.CurrentTile.Y, _tManager.CurrentTile.X].Passable;
             //Vector2 PossibleCameraMove = new Vector2(_characterRect.X - GraphicsDevice.Viewport.Bounds.Width / 2,

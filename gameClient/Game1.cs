@@ -158,8 +158,8 @@ namespace gameClient
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = tileWidth * 12;
-            graphics.PreferredBackBufferHeight = tileWidth * 6;
+            graphics.PreferredBackBufferWidth = tileWidth * 46;
+            graphics.PreferredBackBufferHeight = tileHeight * 47;
             WorldBounds = new Vector2(tileMap.GetLength(1) * tileWidth, tileMap.GetLength(0) * tileHeight);
 
             Content.RootDirectory = "Content";
@@ -236,7 +236,7 @@ namespace gameClient
                 // Create an other player sprites in this client afte
                 new OtherPlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
                                         new Point(player.playerPosition.X, player.playerPosition.Y));
-                connectionMessage = player.playerID + " delivered ";
+                connectionMessage = player.GamerTag + " delivered ";
             }
         }
 
@@ -299,14 +299,17 @@ namespace gameClient
 
         }
 
+        
+
+
         // When we get new player Data Create 
         private void CreatePlayer(PlayerData player)
         {
             //_tManager.CurrentTile.X = 1;
             //_tManager.CurrentTile.Y = 1;
             // Create an other player sprites in this client afte
-            player.playerPosition.X = 64;
-            player.playerPosition.Y = 64;
+            //player.playerPosition.X = 64;
+            //player.playerPosition.Y = 64;
             new SimplePlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
                                     new Point(player.playerPosition.X, player.playerPosition.Y));
             //player.playerPosition.X;
@@ -463,7 +466,7 @@ namespace gameClient
             bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
             bool passable = _tManager.ActiveLayer.Tiles[_tManager.CurrentTile.Y, _tManager.CurrentTile.X].Passable;
             //Vector2 PossibleCameraMove = new Vector2(_characterRect.X - GraphicsDevice.Viewport.Bounds.Width / 2,
-            //                                    _characterRect.Y - GraphicsDevice.Viewport.Bounds.Height / 2);
+            //                                   _characterRect.Y - GraphicsDevice.Viewport.Bounds.Height / 2);
             if (passable)
             {
                 _characterRect = r;
@@ -605,7 +608,9 @@ namespace gameClient
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            drawUsingPlayerCamera();
+           drawUsingPlayerCamera();
+            
+           
             spriteBatch.Begin();
             spriteBatch.DrawString(font, connectionMessage, new Vector2(10, 10), Color.White);
             // TODO: Add your drawing code here
