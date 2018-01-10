@@ -18,7 +18,7 @@ namespace gameClient.GameObjects
         public ChatTextManager(Game game) : base(game)
         {
             game.Components.Add(this);
-            basePosition = new Vector2(game.GraphicsDevice.Viewport.Width - 150, 0);
+            basePosition = new Vector2(game.GraphicsDevice.Viewport.Width - 250, 0);
         }
         protected override void LoadContent()
         {
@@ -41,7 +41,7 @@ namespace gameClient.GameObjects
                 foreach (ChatText ft in faders)
                 {
                     ft.Position = b;
-                    b += new Vector2(0, fontsize.Y - 5);
+                    b += new Vector2(0, fontsize.Y + 30);
                 }
             }
             base.Update(gameTime);
@@ -99,7 +99,7 @@ namespace gameClient.GameObjects
             var font = Game.Services.GetService<SpriteFont>();
             Color myColor = new Color((byte)0, (byte)0, (byte)0, blend);
             sp.Begin(SpriteSortMode.Immediate, BlendState.Additive);
-            sp.DrawString(font, text, Position, new Color((byte)255, (byte)255, (byte)255, blend));
+            sp.DrawString(font, text, Position, new Color((byte)255, (byte)255, (byte)255, blend), 0, Vector2.Zero, 3, SpriteEffects.None, 1);
             sp.End();
             base.Draw(gameTime);
         }

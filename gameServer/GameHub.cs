@@ -10,6 +10,7 @@ namespace gameServer
     public class GameHub : Hub
     {
         #region Game hub variables
+
         // Use static to protect Data across dofferent hub invocations
         public static Queue<PlayerData> RegisteredPlayers = new Queue<PlayerData>(new PlayerData[]
         {
@@ -55,6 +56,8 @@ namespace gameServer
                     Clients.Caller.CurrentPlayers(Players);
                     // Finaly add the new player on teh server
                     Players.Add(newPlayer);
+
+                   
                     return newPlayer;
                 }
 

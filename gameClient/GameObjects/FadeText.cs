@@ -15,7 +15,7 @@ namespace GameComponentNS
         public FadeTextManager(Game game) : base(game)
         {
             game.Components.Add(this);
-            basePosition = new Vector2(10, game.GraphicsDevice.Viewport.Height - 20);
+            basePosition = new Vector2(10, game.GraphicsDevice.Viewport.Height - 200);
         }
         protected override void LoadContent()
         {
@@ -85,7 +85,7 @@ namespace GameComponentNS
             var font = Game.Services.GetService<SpriteFont>();
             Color myColor = new Color((byte)0, (byte)0, (byte)0, blend);
             sp.Begin(SpriteSortMode.Immediate,BlendState.Additive);
-            sp.DrawString(font, text, Position, new Color((byte)255, (byte)255, (byte)255, blend));
+            sp.DrawString(font, text, Position, new Color((byte)255, (byte)255, (byte)255, blend),0,Vector2.Zero,3,SpriteEffects.None,1);
             sp.End();
             base.Draw(gameTime);
         }

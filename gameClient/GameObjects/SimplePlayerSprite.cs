@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.AspNet.SignalR.Client;
 using MonoTileMapEx;
 
+
 namespace Sprites
 {
     public class SimplePlayerSprite :DrawableGameComponent
@@ -29,6 +30,7 @@ namespace Sprites
         private Rectangle _characterRect;
         int tileWidth = 64;
         int tileHeight = 64;
+        bool canMove = false;
         // Constructor epects to see a loaded Texture
         // and a start position
 
@@ -53,57 +55,66 @@ namespace Sprites
 
         public override void Update(GameTime gameTime)
         {
+            if (gameClient.Game1.totalPlayers.Count >= 4)
+            {
+                canMove = true;
+            }
+
             KeyboardState keyState = Keyboard.GetState();
-            Tile previousTile = _tManager.CurrentTile;
 
-            previousPosition = Position;
-            if (InputEngine.IsKeyPressed(Keys.Up))
-                if (_tManager.ActiveLayer.valid("above", _tManager.CurrentTile))
-                {
-                    _tManager.CurrentTile =
-                          _tManager.ActiveLayer.getadjacentTile("above", _tManager.CurrentTile);
-                   // Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
-                }
-
-            if (InputEngine.IsKeyPressed(Keys.Down))
-                if (_tManager.ActiveLayer.valid("below", _tManager.CurrentTile))
-                {
-                    _tManager.CurrentTile =
-                          _tManager.ActiveLayer.getadjacentTile("below", _tManager.CurrentTile);
-                    //Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
-                }
-
-            if (InputEngine.IsKeyPressed(Keys.Left))
-                if (_tManager.ActiveLayer.valid("left", _tManager.CurrentTile))
-                {
-                    _tManager.CurrentTile =
-                          _tManager.ActiveLayer.getadjacentTile("left", _tManager.CurrentTile);
-                    //Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
-                }
-
-            if (InputEngine.IsKeyPressed(Keys.Right))
-                if (_tManager.ActiveLayer.valid("right", _tManager.CurrentTile))
-                { _tManager.CurrentTile =
-                        _tManager.ActiveLayer.getadjacentTile("right", _tManager.CurrentTile);
-                   // Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
-                } 
-            
-            Rectangle r = new Rectangle(_tManager.CurrentTile.X * tileWidth,
-                                        _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
-            Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
-            bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
-            bool passable = _tManager.ActiveLayer.Tiles[_tManager.CurrentTile.Y, _tManager.CurrentTile.X].Passable;
-            //Vector2 PossibleCameraMove = new Vector2(_characterRect.X - GraphicsDevice.Viewport.Bounds.Width / 2,
-            //                                    _characterRect.Y - GraphicsDevice.Viewport.Bounds.Height / 2);
-            if (passable)
+            if (canMove == true)
             {
-                _characterRect = r;
+                Tile previousTile = _tManager.CurrentTile;
+
+                previousPosition = Position;
+                if (InputEngine.IsKeyPressed(Keys.Up))
+                    if (_tManager.ActiveLayer.valid("above", _tManager.CurrentTile))
+                    {
+                        _tManager.CurrentTile =
+                              _tManager.ActiveLayer.getadjacentTile("above", _tManager.CurrentTile);
+                        // Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                    }
+
+                if (InputEngine.IsKeyPressed(Keys.Down))
+                    if (_tManager.ActiveLayer.valid("below", _tManager.CurrentTile))
+                    {
+                        _tManager.CurrentTile =
+                              _tManager.ActiveLayer.getadjacentTile("below", _tManager.CurrentTile);
+                        //Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                    }
+
+                if (InputEngine.IsKeyPressed(Keys.Left))
+                    if (_tManager.ActiveLayer.valid("left", _tManager.CurrentTile))
+                    {
+                        _tManager.CurrentTile =
+                              _tManager.ActiveLayer.getadjacentTile("left", _tManager.CurrentTile);
+                        //Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                    }
+
+                if (InputEngine.IsKeyPressed(Keys.Right))
+                    if (_tManager.ActiveLayer.valid("right", _tManager.CurrentTile))
+                    {
+                        _tManager.CurrentTile =
+                              _tManager.ActiveLayer.getadjacentTile("right", _tManager.CurrentTile);
+                        // Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                    }
+
+                Rectangle r = new Rectangle(_tManager.CurrentTile.X * tileWidth,
+                                            _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
+                Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
+                bool passable = _tManager.ActiveLayer.Tiles[_tManager.CurrentTile.Y, _tManager.CurrentTile.X].Passable;
+                //Vector2 PossibleCameraMove = new Vector2(_characterRect.X - GraphicsDevice.Viewport.Bounds.Width / 2,
+                //                                    _characterRect.Y - GraphicsDevice.Viewport.Bounds.Height / 2);
+                if (passable)
+                {
+                    _characterRect = r;
+                }
+                else
+                {
+                    _tManager.CurrentTile = previousTile;
+                }
             }
-            else
-            {
-                _tManager.CurrentTile = previousTile;
-            }
-           
                // cam.follow(new Vector2((int)_characterRect.X, (int)_characterRect.Y), GraphicsDevice.Viewport);
            
             oldState = keyState;

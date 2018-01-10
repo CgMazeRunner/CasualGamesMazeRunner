@@ -148,6 +148,7 @@ namespace gameClient
         public static TileManager _tManager;
      //   private byte pulseColor;
         Camera cam;
+        public static List<PlayerData> totalPlayers = new List<PlayerData>();
 
 
         HubConnection serverConnection;
@@ -237,6 +238,7 @@ namespace gameClient
                 new OtherPlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
                                         new Point(player.playerPosition.X, player.playerPosition.Y));
                 connectionMessage = player.GamerTag + " delivered ";
+                totalPlayers.Add(player);
             }
         }
 
@@ -246,6 +248,7 @@ namespace gameClient
             new OtherPlayerSprite(this, otherPlayerData, Content.Load<Texture2D>(otherPlayerData.imageName),
                                     new Point(otherPlayerData.playerPosition.X, otherPlayerData.playerPosition.Y));
             new FadeText(this, Vector2.Zero, otherPlayerData.GamerTag + " has joined the game ");
+            totalPlayers.Add(otherPlayerData);
             //    new GameObjects.ChatText(this, Vector2.Zero, otherPlayerData.GamerTag + " has joined the game ");
         }
 
@@ -319,6 +322,7 @@ namespace gameClient
             //player.playerPosition.Y = _tManager.CurrentTile.Y;
              _character = Content.Load<Texture2D>(player.imageName);
             new FadeText(this, Vector2.Zero, " Welcome " + player.GamerTag + " you are playing as " + player.imageName);
+            totalPlayers.Add(player);
             //cam.follow(new Vector2((int)player.playerPosition.X, (int)player.playerPosition.Y), GraphicsDevice.Viewport);
             //new GameObjects.ChatText(this, Vector2.Zero, player.GamerTag + " has joined the game ");
             //Player = player;
@@ -612,7 +616,7 @@ namespace gameClient
             
            
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, connectionMessage, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(font, connectionMessage, new Vector2(10, 10), Color.White,0, Vector2.Zero ,3,SpriteEffects.None,1);
             // TODO: Add your drawing code here
             spriteBatch.End();
             
