@@ -9,7 +9,7 @@ using Engine.Engines;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.AspNet.SignalR.Client;
 using MonoTileMapEx;
-
+using System.Timers;
 
 namespace Sprites
 {
@@ -31,6 +31,9 @@ namespace Sprites
         int tileWidth = 64;
         int tileHeight = 64;
         bool canMove = false;
+        public static float currentTime = 0f;
+
+      public static  Timer time = new Timer();
         // Constructor epects to see a loaded Texture
         // and a start position
 
@@ -61,9 +64,16 @@ namespace Sprites
             }
 
             KeyboardState keyState = Keyboard.GetState();
-
+            
+           
             if (canMove == true)
             {
+                //time.Interval = (0.001);
+
+                //time.Start();
+                //time.BeginInit();
+                currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
                 Tile previousTile = _tManager.CurrentTile;
 
                 previousPosition = Position;
@@ -146,6 +156,7 @@ namespace Sprites
             {
                 sp.Begin();
                 sp.Draw(Image, BoundingRect, tint);
+               
                 sp.End();
             }
 

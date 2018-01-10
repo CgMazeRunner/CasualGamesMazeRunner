@@ -84,11 +84,11 @@ namespace gameServer
 
         public string Chat(string message)
         {
-            message = "Hello";
+            //message = "Hello";
             if (message != null)
             {
                 Clients.Others.chat(message);
-                return message;
+                //return message;
             }
             
             return null;

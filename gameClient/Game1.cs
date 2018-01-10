@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using GameComponentNS;
 using gameClient.GameObjects;
 using MonoTileMapEx;
+using System.Timers;
 
 namespace gameClient
 {
@@ -298,8 +299,7 @@ namespace gameClient
 
                         });
 
-
-
+            
         }
 
         
@@ -408,20 +408,17 @@ namespace gameClient
                 string chatMessage = "";
                 Chatting(chatMessage);
 
-                        
-                        chatMessage = Chatting(chatMessage);
-                        new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
+
+                chatMessage = Chatting(chatMessage);
+                new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
 
 
-                //proxy.Invoke <string>("Chat").ContinueWith(
-                //    (q) => {
-
-
-
+                //proxy.Invoke<string>("Chat").ContinueWith(
+                //    (q) =>
+                //    {
                 //        if (q.Result == null)
                 //        {
                 //            new GameObjects.ChatText(this, Vector2.Zero, "Not working");
-
                 //        }
                 //        else
                 //        {
@@ -429,7 +426,11 @@ namespace gameClient
                 //        }
                 //    });
 
-            }
+                proxy.Invoke("Chat", new Object[]
+                    {
+                    chatMessage});
+
+        }
 
             //if (InputEngine.IsKeyPressed(Keys.T))
             //{
@@ -441,30 +442,7 @@ namespace gameClient
 
             Tile previousTile = _tManager.CurrentTile;
 
-            //if (InputEngine.IsKeyPressed(Keys.Up))
-            //{
-            //    if (_tManager.ActiveLayer.valid("above", _tManager.CurrentTile))
-            //        _tManager.CurrentTile =
-            //            _tManager.ActiveLayer.getadjacentTile("above", _tManager.CurrentTile);
-            //}
-            ////&& !oldState.IsKeyDown(Keys.S)
-            //if (InputEngine.IsKeyPressed(Keys.Down))
-            //{
-            //    if (_tManager.ActiveLayer.valid("below", _tManager.CurrentTile))
-            //        _tManager.CurrentTile =
-            //            _tManager.ActiveLayer.getadjacentTile("below", _tManager.CurrentTile);
-            //}
-            ////&& !oldState.IsKeyDown(Keys.A)
-            //if (InputEngine.IsKeyPressed(Keys.Left))
-            //    if (_tManager.ActiveLayer.valid("left", _tManager.CurrentTile))
-            //        _tManager.CurrentTile =
-            //            _tManager.ActiveLayer.getadjacentTile("left", _tManager.CurrentTile);
-            ////&& !oldState.IsKeyDown(Keys.D)
-            //if (InputEngine.IsKeyPressed(Keys.Right))
-            //    if (_tManager.ActiveLayer.valid("right", _tManager.CurrentTile))
-            //        _tManager.CurrentTile =
-            //            _tManager.ActiveLayer.getadjacentTile("right", _tManager.CurrentTile);
-
+            
             Rectangle r = new Rectangle(_tManager.CurrentTile.X * tileWidth,
                                            _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
             bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
@@ -527,6 +505,7 @@ namespace gameClient
 
                 }
             // draw the character
+            spriteBatch.DrawString(font, Math.Round( SimplePlayerSprite.currentTime, 2).ToString(), new Vector2(GraphicsDevice.Viewport.Width/2, 10), Color.White, 0, Vector2.Zero, 3, SpriteEffects.None, 1);
 
             spriteBatch.Draw(_character, new Rectangle(_tManager.CurrentTile.X * tileWidth,
                           _tManager.CurrentTile.Y * tileHeight,
@@ -617,6 +596,7 @@ namespace gameClient
            
             spriteBatch.Begin();
             spriteBatch.DrawString(font, connectionMessage, new Vector2(10, 10), Color.White,0, Vector2.Zero ,3,SpriteEffects.None,1);
+            
             // TODO: Add your drawing code here
             spriteBatch.End();
             
