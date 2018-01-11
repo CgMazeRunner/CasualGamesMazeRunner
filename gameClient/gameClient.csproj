@@ -59,6 +59,7 @@
     <Compile Include="GameObjects\ChatText.cs" />
     <Compile Include="GameObjects\FadeText.cs" />
     <Compile Include="GameObjects\InputEngine.cs" />
+    <Compile Include="GameObjects\Leaderboard.cs" />
     <Compile Include="GameObjects\OtherPlayers.cs" />
     <Compile Include="GameObjects\SimplePlayerSprite.cs" />
     <Compile Include="GameObjects\TileManager.cs" />

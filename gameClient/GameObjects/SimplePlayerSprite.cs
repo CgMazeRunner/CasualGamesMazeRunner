@@ -32,8 +32,9 @@ namespace Sprites
         int tileHeight = 64;
         bool canMove = false;
         public static float currentTime = 0f;
-
-      public static  Timer time = new Timer();
+        public static float FinshTime = 0f;
+        public static bool firstTime = true;
+        public static  Timer time = new Timer();
         // Constructor epects to see a loaded Texture
         // and a start position
 
@@ -58,7 +59,7 @@ namespace Sprites
 
         public override void Update(GameTime gameTime)
         {
-            if (gameClient.Game1.totalPlayers.Count >= 4)
+            if (gameClient.Game1.totalPlayers.Count >= 1)
             {
                 canMove = true;
             }
@@ -145,6 +146,28 @@ namespace Sprites
             }
 
             BoundingRect = new Rectangle(Position.X, Position.Y, Image.Width, Image.Height);
+
+            if (_tManager.CurrentTile.X >= 45 && firstTime == true)
+            {
+                
+                
+                FinshTime = currentTime;
+                //gameClient.Game1.LeaderboardChat(gameTime,FinshTime.ToString());
+                //string LeaderboardMessage = "";
+                //LeaderboardMessage = FinshTime.ToString();
+                //gameClient.Game1.LeaderboardChat(LeaderboardMessage);
+
+
+                //LeaderboardMessage = gameClient.Game1.LeaderboardChat(LeaderboardMessage);
+                    firstTime = false;
+
+                //new GameObject.LeaderboardText(this, Vector2.Zero, FinshTime.ToString());
+
+            
+                //proxy.Invoke("Leaderboard", new Object[]
+                //    {LeaderboardMessage});
+            }
+
             base.Update(gameTime);
         }
 

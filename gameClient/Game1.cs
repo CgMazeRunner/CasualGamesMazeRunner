@@ -179,6 +179,7 @@ namespace gameClient
             new InputEngine(this);
             new FadeTextManager(this);
             new ChatTextManager(this);
+            new Leaderboard(this);
             _tManager = new TileManager();
             cam = new Camera(Vector2.Zero,
                 new Vector2(tileMap.GetLength(1) * tileWidth, tileMap.GetLength(0) * tileHeight));
@@ -426,12 +427,25 @@ namespace gameClient
                 //        }
                 //    });
 
-                proxy.Invoke("Chat", new Object[]
-                    {
-                    chatMessage});
+                //proxy.Invoke("Chat", new Object[]
+                //    {
+                //    chatMessage});
 
         }
+            //if (InputEngine.IsKeyPressed(Keys.L))
+            //{
+            //    string LeaderboardMessage = "";
+            //    LeaderboardChat(LeaderboardMessage);
 
+
+            //    LeaderboardMessage = LeaderboardChat(LeaderboardMessage);
+            //    new GameObjects.LeaderboardText(this, Vector2.Zero, LeaderboardMessage);
+
+
+            //    proxy.Invoke("Leaderboard", new Object[]
+            //        {LeaderboardMessage});
+
+            //}
             //if (InputEngine.IsKeyPressed(Keys.T))
             //{
             //    string chatMessage = "";
@@ -462,6 +476,19 @@ namespace gameClient
             oldState = keyState;
 
             // TODO: Add your update logic here
+            if(SimplePlayerSprite.FinshTime != 0f)
+            {
+                new GameObjects.LeaderboardText(this, Vector2.Zero,"Winner " + SimplePlayerSprite.FinshTime.ToString());
+
+
+                // proxy.Invoke("Leaderboard", new Object[]
+                //   {LeaderboardMessage});
+
+                //LeaderboardMessage = SimplePlayerSprite.FinshTime.ToString();
+                //writeLeaderboard(LeaderboardMessage);
+                //return LeaderboardMessage;
+                SimplePlayerSprite.FinshTime = 0f;
+            }
 
             base.Update(gameTime);
         }
@@ -573,7 +600,10 @@ namespace gameClient
         {
             new GameObjects.ChatText(this, Vector2.Zero, result);
         }
-
+        private void writeLeaderboard(string result)
+        {
+            new GameObjects.ChatText(this, Vector2.Zero, result);
+        }
         protected string Chatting(string chatmsg)
         {
 
@@ -583,7 +613,32 @@ namespace gameClient
             
             //new ChatText(Game, Vector2.Zero, otherPlayerData.GamerTag + " Chatting ");
         }
+        //public string LeaderboardChat(string LeaderboardMessage)
+        //{
+            
+        //    //LeaderboardChat(LeaderboardMessage);
 
+
+        //    //LeaderboardMessage = LeaderboardChat(LeaderboardMessage);
+        //    new GameObjects.LeaderboardText(this, Vector2.Zero, SimplePlayerSprite.FinshTime.ToString());
+
+
+        //   // proxy.Invoke("Leaderboard", new Object[]
+        //     //   {LeaderboardMessage});
+
+        //    LeaderboardMessage = SimplePlayerSprite.FinshTime.ToString();
+        //    writeLeaderboard(LeaderboardMessage);
+        //    return LeaderboardMessage;
+
+        //    //new ChatText(Game, Vector2.Zero, otherPlayerData.GamerTag + " Chatting ");
+        //}
+        
+        //public static void LeaderB(string Message)
+        //{
+        //   LeaderboardChat(Message);
+            
+
+        //}
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
