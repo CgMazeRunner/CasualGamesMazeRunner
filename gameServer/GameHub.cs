@@ -14,10 +14,10 @@ namespace gameServer
         // Use static to protect Data across dofferent hub invocations
         public static Queue<PlayerData> RegisteredPlayers = new Queue<PlayerData>(new PlayerData[]
         {
-            new PlayerData { GamerTag = "Dark Terror", imageName = "", playerID = Guid.NewGuid().ToString(), XP = 200 },
-            new PlayerData { GamerTag = "Mistic Meg", imageName = "", playerID = Guid.NewGuid().ToString(), XP = 2000 },
-            new PlayerData { GamerTag = "Jinxy", imageName = "", playerID = Guid.NewGuid().ToString(), XP = 1200 },
-            new PlayerData { GamerTag = "Jabber Jaws", imageName = "", playerID = Guid.NewGuid().ToString(), XP = 3200 },
+            new PlayerData { GamerTag = "M4sterchi3f", imageName = "", playerID = Guid.NewGuid().ToString(), XP = 200 },
+            new PlayerData { GamerTag = "N0SC0PE", imageName = "", playerID = Guid.NewGuid().ToString(), XP = 2000 },
+            new PlayerData { GamerTag = "NoobSlayer", imageName = "", playerID = Guid.NewGuid().ToString(), XP = 1200 },
+            new PlayerData { GamerTag = "Player5572", imageName = "", playerID = Guid.NewGuid().ToString(), XP = 3200 },
         });
 
         public static List<PlayerData> Players = new List<PlayerData>();
@@ -84,13 +84,13 @@ namespace gameServer
 
         public string Chat()
         {
-            //message = "Hello";
-            //if (message != null)
-            //{
-               Clients.Others.chat("this is a chat");
-            //    //return message;
-            //}
-            
+            string message = "welcome";
+            if (message != null)
+            {
+                Clients.Others.chat("this is a chat");
+                return message;
+            }
+
             return null;
             // Clients.All(new ChatText(this, Vector2.Zero, message););
 

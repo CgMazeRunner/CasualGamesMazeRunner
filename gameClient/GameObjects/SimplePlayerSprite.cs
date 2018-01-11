@@ -62,12 +62,14 @@ namespace Sprites
         {
             if (gameClient.Game1.totalPlayers.Count >= 2)
             {
+                //prevents timer from starting before 2 players have joined
+                
                 canMove = true;
             }
 
             KeyboardState keyState = Keyboard.GetState();
-            
-           
+
+            //prevents movement before game starts
             if (canMove == true)
             {
                 //time.Interval = (0.001);
@@ -79,6 +81,7 @@ namespace Sprites
                 Tile previousTile = _tManager.CurrentTile;
 
                 previousPosition = Position;
+                //movement controls
                 if (InputEngine.IsKeyPressed(Keys.Up))
                     if (_tManager.ActiveLayer.valid("above", _tManager.CurrentTile))
                     {
@@ -113,7 +116,7 @@ namespace Sprites
 
                 Rectangle r = new Rectangle(_tManager.CurrentTile.X * tileWidth,
                                             _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
-                Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
+                
                 bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
                 bool passable = _tManager.ActiveLayer.Tiles[_tManager.CurrentTile.Y, _tManager.CurrentTile.X].Passable;
                 //Vector2 PossibleCameraMove = new Vector2(_characterRect.X - GraphicsDevice.Viewport.Bounds.Width / 2,
@@ -127,8 +130,8 @@ namespace Sprites
                     _tManager.CurrentTile = previousTile;
                 }
             }
-               // cam.follow(new Vector2((int)_characterRect.X, (int)_characterRect.Y), GraphicsDevice.Viewport);
-           
+            // cam.follow(new Vector2((int)_characterRect.X, (int)_characterRect.Y), GraphicsDevice.Viewport);
+            Position = new Point(_tManager.CurrentTile.X * tileWidth, _tManager.CurrentTile.Y * tileHeight);
             oldState = keyState;
 
             //Position += new Point(speed,0) ;
@@ -147,20 +150,14 @@ namespace Sprites
             }
 
             BoundingRect = new Rectangle(Position.X, Position.Y, Image.Width, Image.Height);
-
+            //sets finish point and passes time and gamertag when finish point reached
             if (_tManager.CurrentTile.X >= 45 && firstTime == true)
             {
-                
-                
                 FinshTime = currentTime;
-                gamerTime = pData.GamerTag + ": " + FinshTime.ToString();
+                
+                gamerTime = pData.GamerTag + ": " + Math.Round(FinshTime, 2).ToString();
                     firstTime = false;
 
-                //new GameObject.LeaderboardText(this, Vector2.Zero, FinshTime.ToString());
-
-            
-                //proxy.Invoke("Leaderboard", new Object[]
-                //    {LeaderboardMessage});
             }
 
             base.Update(gameTime);

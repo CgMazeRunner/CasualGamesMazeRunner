@@ -7,6 +7,7 @@ namespace MonoTileMapEx
 {
     public class TileManager
     {
+        //sets information for laying out tile map
         List<TileLayer> _layers = new List<TileLayer>();
 
         Tile _currentTile;

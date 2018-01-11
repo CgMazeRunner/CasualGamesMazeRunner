@@ -83,6 +83,8 @@ namespace gameClient.GameObjects
                            t => t.GetType() == typeof(ChatText));
             if (faders.Count() > 5)
             {
+                //Caps the number of chat messages
+
                 //if (blend > 0)
                 //    blend--;
                 //else { Game.Components.Remove(this); }

@@ -24,5 +24,9 @@ namespace CommonDataItems
         public string Password;
         public Texture2D character;
     }
+    public class MessageText
+    {
+        public string message = string.Empty;
+    }
   
 }

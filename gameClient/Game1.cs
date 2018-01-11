@@ -232,7 +232,7 @@ namespace gameClient
         {
             foreach (PlayerData player in otherPlayers)
             {
-                // Create an other player sprites in this client afte
+                // Create an other player sprites in this client after
                 new OtherPlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
                                         new Point(player.playerPosition.X, player.playerPosition.Y));
                 connectionMessage = player.GamerTag + " delivered ";
@@ -383,31 +383,31 @@ namespace gameClient
 
             if (InputEngine.IsKeyPressed(Keys.T))
             {
+                //posts dummy text for chat
                 string chatMessage = "";
 
                 chatMessage = Chatting(chatMessage);
                 new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
 
-                proxy.Invoke<string>("Chat", chatMessage).ContinueWith(
-                    (q) =>
-                    {
-                        string messageFromServer = q.ToString();
-                        if (chatMessage == null)
-                        {
-                            new GameObjects.ChatText(this, Vector2.Zero, "Not working");
-                        }
-                        else
-                        {
-                            writeChat(chatMessage);
-                        }
-                    });
+                //proxy.Invoke<string>("Chat").ContinueWith(
+                //    (q) =>
+                //    {
+                //        if (q.Result == null)
+                //        {
+                //            new GameObjects.ChatText(this, Vector2.Zero, "Not working");
+                //        }
+                //        else
+                //        {
+                //            writeChat(q.Result);
+                //        }
+                //    });
 
-                //proxy.Invoke("Chat", chatMessage);
+                //proxy.Invoke("Chat").ContinueWith((Task) => writeChat(Task.res));
             }
 
             Tile previousTile = _tManager.CurrentTile;
 
-            
+            //setting bounding box
             Rectangle r = new Rectangle(_tManager.CurrentTile.X * tileWidth,
                                            _tManager.CurrentTile.Y * tileHeight, tileWidth, tileHeight);
             bool inView = GraphicsDevice.Viewport.Bounds.Contains(r);
@@ -426,7 +426,7 @@ namespace gameClient
             cam.follow(new Vector2((int)_characterRect.X, (int)_characterRect.Y), GraphicsDevice.Viewport);
             oldState = keyState;
 
-            // TODO: Add your update logic here
+            //takes finish time and sends to draw. prevent repeating
             if(SimplePlayerSprite.FinshTime != 0f)
             {
                 new GameObjects.LeaderboardText(this, Vector2.Zero, SimplePlayerSprite.gamerTime);
@@ -541,16 +541,20 @@ namespace gameClient
 
         private void writeChat(string result)
         {
-            new GameObjects.ChatText(this, Vector2.Zero, result);
+            //makes chat text an object for display
+            new GameObjects.ChatText(this, Vector2.Zero, result.ToString());
         }
         private void writeLeaderboard(string result)
         {
+            //makes leaderboard an object for display
             new GameObjects.ChatText(this, Vector2.Zero, result);
         }
         protected string Chatting(string chatmsg)
         {
+            //testing
             chatmsg = "hello";
-            return chatmsg;           
+            return chatmsg;
+                       
         }
         
         /// <summary>

@@ -10,7 +10,7 @@ namespace gameClient.GameObjects
 {
     class Leaderboard : DrawableGameComponent
     {
-        
+        //Sets leaderboard text 
             Vector2 basePosition;
 
             public Leaderboard(Game game) : base(game)
