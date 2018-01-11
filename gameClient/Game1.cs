@@ -478,7 +478,7 @@ namespace gameClient
             // TODO: Add your update logic here
             if(SimplePlayerSprite.FinshTime != 0f)
             {
-                new GameObjects.LeaderboardText(this, Vector2.Zero,"Winner " + SimplePlayerSprite.FinshTime.ToString());
+                new GameObjects.LeaderboardText(this, Vector2.Zero, SimplePlayerSprite.gamerTime);
 
 
                 // proxy.Invoke("Leaderboard", new Object[]

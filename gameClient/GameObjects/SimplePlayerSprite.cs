@@ -34,6 +34,7 @@ namespace Sprites
         public static float currentTime = 0f;
         public static float FinshTime = 0f;
         public static bool firstTime = true;
+        public static string gamerTime;
         public static  Timer time = new Timer();
         // Constructor epects to see a loaded Texture
         // and a start position
@@ -59,7 +60,7 @@ namespace Sprites
 
         public override void Update(GameTime gameTime)
         {
-            if (gameClient.Game1.totalPlayers.Count >= 1)
+            if (gameClient.Game1.totalPlayers.Count >= 2)
             {
                 canMove = true;
             }
@@ -152,13 +153,7 @@ namespace Sprites
                 
                 
                 FinshTime = currentTime;
-                //gameClient.Game1.LeaderboardChat(gameTime,FinshTime.ToString());
-                //string LeaderboardMessage = "";
-                //LeaderboardMessage = FinshTime.ToString();
-                //gameClient.Game1.LeaderboardChat(LeaderboardMessage);
-
-
-                //LeaderboardMessage = gameClient.Game1.LeaderboardChat(LeaderboardMessage);
+                gamerTime = pData.GamerTag + ": " + FinshTime.ToString();
                     firstTime = false;
 
                 //new GameObject.LeaderboardText(this, Vector2.Zero, FinshTime.ToString());
