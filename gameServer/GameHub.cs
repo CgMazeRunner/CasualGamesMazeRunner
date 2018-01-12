@@ -95,5 +95,18 @@ namespace gameServer
             // Clients.All(new ChatText(this, Vector2.Zero, message););
 
         }
+        public string LeaderBoardINvoke(string message)
+        {
+
+            if (message != null)
+            {
+                Clients.Others.chat(message);
+                return message;
+            }
+
+            return null;
+            // Clients.All(new ChatText(this, Vector2.Zero, message););
+
+        }
     }
 }

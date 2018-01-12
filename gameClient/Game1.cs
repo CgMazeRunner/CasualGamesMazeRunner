@@ -201,12 +201,15 @@ namespace gameClient
             Action<string> _Chat = writeChat;
             proxy.On<string>("chat", _Chat);
 
+            Action<string> LeaderB = writeLeaderboard;
+            proxy.On<string>("LeaderBoardINvoke", LeaderB);
+
             Action<string, Position> otherMove = clientOtherMoved;
             proxy.On<string, Position>("OtherMove", otherMove);
 
             // Add the proxy client as a Game service o components can send messages 
             Services.AddService<IHubProxy>(proxy);
-
+           
             base.Initialize();
         }
 
@@ -379,7 +382,9 @@ namespace gameClient
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            {
+                //
+                Exit(); }
 
             KeyboardState keyState = Keyboard.GetState();
 
@@ -433,6 +438,18 @@ namespace gameClient
             {
                 new GameObjects.LeaderboardText(this, Vector2.Zero, SimplePlayerSprite.gamerTime);
                 SimplePlayerSprite.FinshTime = 0f;
+                proxy.Invoke<string>("LeaderBoardINvoke", new object[] { SimplePlayerSprite.gamerTime }).ContinueWith(
+                    (q) =>
+                    {
+                        if (q.Result == null)
+                        {
+                            new GameObjects.LeaderboardText(this, Vector2.Zero, "Not working");
+                        }
+                        else
+                        {
+                            writeLeaderboard(q.Result);
+                        }
+                    });
             }
 
             base.Update(gameTime);
@@ -549,7 +566,7 @@ namespace gameClient
         private void writeLeaderboard(string result)
         {
             //makes leaderboard an object for display
-            new GameObjects.ChatText(this, Vector2.Zero, result);
+            new GameObjects.LeaderboardText(this, Vector2.Zero, result);
         }
         protected string Chatting(string chatmsg)
         {
