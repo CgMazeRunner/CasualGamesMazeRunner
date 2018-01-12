@@ -154,6 +154,7 @@ namespace gameClient
         IHubProxy proxy;
 
         public bool Connected { get; private set; }
+        public string ID { get; private set; }
 
         public Game1()
         {
@@ -297,6 +298,7 @@ namespace gameClient
         // When we get new player Data Create 
         private void CreatePlayer(PlayerData player)
         {
+            ID = player.GamerTag;
             new SimplePlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
                                     new Point(player.playerPosition.X, player.playerPosition.Y));
 
@@ -389,18 +391,18 @@ namespace gameClient
                 chatMessage = Chatting(chatMessage);
                 new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
 
-                //proxy.Invoke<string>("Chat").ContinueWith(
-                //    (q) =>
-                //    {
-                //        if (q.Result == null)
-                //        {
-                //            new GameObjects.ChatText(this, Vector2.Zero, "Not working");
-                //        }
-                //        else
-                //        {
-                //            writeChat(q.Result);
-                //        }
-                //    });
+                proxy.Invoke<string>("Chat", new object[] { ID +": " + chatMessage }).ContinueWith(
+                    (q) =>
+                    {
+                        if (q.Result == null)
+                        {
+                            new GameObjects.ChatText(this, Vector2.Zero, "Not working");
+                        }
+                        else
+                        {
+                            writeChat(q.Result);
+                        }
+                    });
 
                 //proxy.Invoke("Chat").ContinueWith((Task) => writeChat(Task.res));
             }
