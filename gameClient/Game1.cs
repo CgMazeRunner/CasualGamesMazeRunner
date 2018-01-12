@@ -202,7 +202,7 @@ namespace gameClient
             proxy.On<string>("chat", _Chat);
 
             Action<string> LeaderB = writeLeaderboard;
-            proxy.On<string>("LeaderBoardINvoke", LeaderB);
+            proxy.On<string>("leader", LeaderB);
 
             Action<string, Position> otherMove = clientOtherMoved;
             proxy.On<string, Position>("OtherMove", otherMove);
