@@ -100,7 +100,7 @@ namespace gameServer
 
             if (message != null)
             {
-                Clients.Others.chat(message);
+                Clients.Others.leader(message);
                 return message;
             }
 

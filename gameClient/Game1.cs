@@ -202,7 +202,7 @@ namespace gameClient
             proxy.On<string>("chat", _Chat);
 
             Action<string> LeaderB = writeLeaderboard;
-            proxy.On<string>("LeaderBoardINvoke", LeaderB);
+            proxy.On<string>("leader", LeaderB);
 
             Action<string, Position> otherMove = clientOtherMoved;
             proxy.On<string, Position>("OtherMove", otherMove);
@@ -394,7 +394,7 @@ namespace gameClient
                 string chatMessage = "";
 
                 chatMessage = Chatting(chatMessage);
-                new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
+               // new GameObjects.ChatText(this, Vector2.Zero, chatMessage);
 
                 proxy.Invoke<string>("Chat", new object[] { ID +": " + chatMessage }).ContinueWith(
                     (q) =>
@@ -436,7 +436,7 @@ namespace gameClient
             //takes finish time and sends to draw. prevent repeating
             if(SimplePlayerSprite.FinshTime != 0f)
             {
-                new GameObjects.LeaderboardText(this, Vector2.Zero, SimplePlayerSprite.gamerTime);
+                //new GameObjects.LeaderboardText(this, Vector2.Zero, SimplePlayerSprite.gamerTime);
                 SimplePlayerSprite.FinshTime = 0f;
                 proxy.Invoke<string>("LeaderBoardINvoke", new object[] { SimplePlayerSprite.gamerTime }).ContinueWith(
                     (q) =>

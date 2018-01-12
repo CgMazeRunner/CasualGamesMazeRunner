@@ -39,7 +39,7 @@ namespace gameClient.GameObjects
                     foreach (LeaderboardText ft in Stack)
                     {
                         ft.Position = b;
-                        b += new Vector2(0, fontsize.Y - 30);
+                        b += new Vector2(0, fontsize.Y - 130);
                     }
                 }
                 base.Update(gameTime);
