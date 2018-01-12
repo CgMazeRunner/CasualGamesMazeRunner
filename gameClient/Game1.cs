@@ -195,6 +195,9 @@ namespace gameClient
             Action<PlayerData> joined = clientJoined;
             proxy.On<PlayerData>("Joined", joined);
 
+            Action<string> Leave = clientleft;
+            proxy.On<string>("left", Leave);
+
             Action<List<PlayerData>> currentPlayers = clientPlayers;
             proxy.On<List<PlayerData>>("CurrentPlayers", currentPlayers);
 
@@ -206,6 +209,8 @@ namespace gameClient
 
             Action<string, Position> otherMove = clientOtherMoved;
             proxy.On<string, Position>("OtherMove", otherMove);
+
+
 
             // Add the proxy client as a Game service o components can send messages 
             Services.AddService<IHubProxy>(proxy);
@@ -251,6 +256,11 @@ namespace gameClient
                                     new Point(otherPlayerData.playerPosition.X, otherPlayerData.playerPosition.Y));
             new FadeText(this, Vector2.Zero, otherPlayerData.GamerTag + " has joined the game ");
             totalPlayers.Add(otherPlayerData);
+        }
+        private void clientleft(string pData)
+        {
+            PlayerData playerToRemove = totalPlayers.Find(l => l.playerID == pData);
+            playerToRemove.character.Dispose();
         }
 
         private void ServerConnection_StateChanged(StateChange State)
@@ -302,6 +312,7 @@ namespace gameClient
         private void CreatePlayer(PlayerData player)
         {
             ID = player.GamerTag;
+            Player = player;
             new SimplePlayerSprite(this, player, Content.Load<Texture2D>(player.imageName),
                                     new Point(player.playerPosition.X, player.playerPosition.Y));
 
@@ -383,7 +394,19 @@ namespace gameClient
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                //
+                proxy.Invoke<string>("RemovePlayer", new object[] {Player.playerID}).ContinueWith(
+                    (s) =>
+                    {
+                        if (s.Result == null)
+                        {
+                            new GameObjects.ChatText(this, Vector2.Zero, "Not working");
+                        }
+                        else
+                        {
+                            clientleft(s.Result);
+                        }
+                    });
+                
                 Exit(); }
 
             KeyboardState keyState = Keyboard.GetState();

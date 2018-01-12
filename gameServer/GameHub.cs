@@ -108,5 +108,23 @@ namespace gameServer
             // Clients.All(new ChatText(this, Vector2.Zero, message););
 
         }
+
+        public void RemovePlayer(string playerID)
+        {
+            // Update the collection with the new player position is the player exists
+            PlayerData found = Players.FirstOrDefault(p => p.playerID == playerID);
+
+            if (found != null)
+            {
+                
+                // Tell this client about all the other current 
+                Clients.Caller.CurrentPlayers(Players);
+                // Finaly add the new player on teh server
+                Players.Remove(found);
+                characters.Push(found.imageName);
+                Clients.Others.Left(found);
+            }
+
+        }
     }
 }

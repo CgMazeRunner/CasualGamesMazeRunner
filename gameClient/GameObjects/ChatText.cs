@@ -18,7 +18,7 @@ namespace gameClient.GameObjects
         public ChatTextManager(Game game) : base(game)
         {
             game.Components.Add(this);
-            basePosition = new Vector2(game.GraphicsDevice.Viewport.Width - 250, 0);
+            basePosition = new Vector2(game.GraphicsDevice.Viewport.Width - 600, 0);
         }
         protected override void LoadContent()
         {
